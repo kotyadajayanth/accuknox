@@ -1,0 +1,312 @@
+Problem Statement 1:
+Title: Product Requirement and Low-Fidelity Wireframes
+Background/Task:
+A security product requires scanning container images and showing users the findings.
+Container images contain applications with their dependencies and all these components
+might have known vulnerabilities.
+As a user:
+I need to understand which container images have vulnerabilities and how severe they are.
+If there are any critical or high vulnerabilities, I need to fix them and thus need to identify
+which images have to be fixed.
+I have thousands of images in my repository.
+Help us build a product requirements/wireframe that can help users solve the above
+problems.
+Deliverables:
+Create a Product Requirements document for the above.
+Create low-fidelity wireframes for the user interface for this product.
+(Bonus/Optional Task) Identify development action items that can be discussed with the
+development team.
+
+ANSWER IS:
+
+Cloud Security Product Requirement and Wireframe Submission
+Problem Statement 1
+Title: Product Requirement and Low-Fidelity Wireframes
+
+📜 Product Requirements Document (PRD)
+Objective:
+Build a dashboard that helps users quickly identify container images with vulnerabilities and fix them based on severity.
+
+Key Features:
+Dashboard Summary:
+Show total container images, number of vulnerable images, and severity counts (Critical, High, Medium, Low).
+
+Image Vulnerability Table:
+Show a list with:
+
+Image Name
+
+Number of vulnerabilities
+
+Highest severity level
+
+Last Scanned Date
+
+Status (Needs Fix / Safe)
+
+Filters and Search:
+Allow filtering by severity and searching by image name.
+
+Detailed Image Report:
+On clicking an image, show:
+
+List of vulnerabilities
+
+CVSS score
+
+Description
+
+Fix recommendations
+
+Actions:
+
+"Mark for Fix" option
+
+"Rescan" option
+
+Notifications:
+
+Alerts for critical vulnerabilities found.
+
+🖌️ Low-Fidelity Wireframe (Text Sketch)
+Main Dashboard Layout:
+pgsql
+Copy
+Edit
+-------------------------------------------------
+| Container Image Vulnerability Dashboard       |
+-------------------------------------------------
+| Total Images: XXXX | Vulnerable: XXXX | Critical: XX |
+-------------------------------------------------
+| [Filter: Critical | High | Medium | Low ]  [Search Box] |
+-------------------------------------------------
+| Image Name    | Vulnerabilities | Highest Severity | Last Scan | Status | Actions |
+|---------------------------------------------------------------|
+| app:v1        | 5                | High             | 2025-04-20| Needs Fix | View |
+| web:v3        | 0                | -                | 2025-04-21| Safe     | View |
+| db:v2         | 12               | Critical         | 2025-04-19| Needs Fix | View |
+|---------------------------------------------------------------|
+Detailed Image Report:
+sql
+Copy
+Edit
+-------------------------------------------------
+| Image: app:v1 - Detailed Vulnerabilities       |
+-------------------------------------------------
+| Vulnerability ID | Severity | Description     | Fix Available |
+|-------------------------------------------------|
+| CVE-2023-xxxx     | High     | Buffer Overflow | Yes          |
+| CVE-2023-yyyy     | Medium   | SQL Injection   | Yes          |
+|-------------------------------------------------|
+[Mark for Fixing]  [Rescan Image]
+🚀 Bonus: Development Action Items
+Backend:
+
+Integrate container scanning tool (like Trivy, Clair).
+
+Develop APIs to fetch scan data.
+
+Store scan results in a database.
+
+Frontend:
+
+Build dashboard with filters and search.
+
+Create detailed vulnerability view.
+
+Add buttons for 'Fix' and 'Rescan'.
+
+DevOps/Cloud:
+
+Automate scanning in CI/CD pipelines.
+
+Setup alert system for new vulnerabilities.
+
+Problem Statement 2:
+Title: Kubernetes Security Scan
+Background/Task:
+Install local K8s cluster (such as Minikube, K3s, Kind, etc) and use a tool such as Kubescape (or
+any other tool) to scan for findings and send the list of the findings.
+Deliverables:
+A JSON file containing the k8s findings.
+
+ANSWER IS:
+
+Problem Statement 2
+Title: Kubernetes Security Scan
+
+📜 Task Summary:
+Install a local Kubernetes (K8s) cluster using Minikube / Kind / K3s.
+
+Use a Kubernetes security scanning tool (e.g., Kubescape, Kube-Bench, etc.) to scan the cluster.
+
+Save the security findings into a JSON file.
+
+Upload the JSON findings file.
+
+🛠️ Steps Followed:
+Installed Local Kubernetes Cluster:
+
+Tool used: Minikube
+
+Command:
+
+bash
+Copy
+Edit
+minikube start
+Installed Kubernetes Scanner:
+
+Tool used: Kubescape (open-source security scanner for K8s)
+
+Command to install Kubescape:
+
+bash
+Copy
+Edit
+curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh | /bin/bash
+Performed Kubernetes Scan:
+
+Command to run scan:
+
+bash
+Copy
+Edit
+kubescape scan framework nsa --format json --output results.json
+Explanation:
+
+framework nsa : Using NSA (National Security Agency) recommended best practices.
+
+--format json : Output results in JSON format.
+
+--output results.json : Save results to a file called results.json.
+
+Result:
+
+Generated a results.json file containing all security findings.
+
+Problem Statement 3 (Technical):
+Step #1:
+Create a GoLang Program which reflects the current date & time and host it on GitHub
+Push that code to DockerHub
+In other words: Use docker to create a web application with date & time as the only content
+Step #2:
+Using the declarative approach to deploy the container with 2 replicas to k8s
+Step #3:
+Expose the app to the Internet (on WAN)
+Resource Hint/Help:
+For k8s resources, you can use Qwiklabs (https://www.qwiklabs.com/ (https://www.qwiklabs.com/)) it
+gives you around 30 to 60 mins of k8s resources or you can use your own GCP account or any
+online available platform like https://labs.play-with-k8s.com (https://labs.play-with-k8s.com), etc
+
+ANSWER IS:
+
+Step-by-Step Solution:
+Step 1: GoLang Program (Show Current Date & Time)
+GoLang Code (main.go):
+
+go
+Copy
+Edit
+package main
+
+import (
+    "fmt"
+    "net/http"
+    "time"
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+    currentTime := time.Now().Format("2006-01-02 15:04:05")
+    fmt.Fprintf(w, "Current Date and Time: %s", currentTime)
+}
+
+func main() {
+    http.HandleFunc("/", handler)
+    http.ListenAndServe(":8080", nil)
+}
+✅ This code starts a web server on port 8080 and shows current date & time.
+
+Dockerfile:
+dockerfile
+Copy
+Edit
+# Use official Golang image
+FROM golang:1.21
+
+# Set working directory
+WORKDIR /app
+
+# Copy Go code
+COPY main.go .
+
+# Build the Go app
+RUN go build -o main .
+
+# Run the app
+CMD ["./main"]
+Commands used:
+Build Docker Image:
+
+bash
+Copy
+Edit
+docker build -t yourdockerhubusername/datetime-app .
+Push to DockerHub:
+
+bash
+Copy
+Edit
+docker login
+docker push yourdockerhubusername/datetime-app
+✅ Now, your Docker image is hosted on DockerHub.
+
+Step 2: Deploy to Kubernetes using Declarative Approach (YAML Files)
+Kubernetes Deployment YAML (deployment.yaml):
+yaml
+Copy
+Edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datetime-app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: datetime-app
+  template:
+    metadata:
+      labels:
+        app: datetime-app
+    spec:
+      containers:
+      - name: datetime-app
+        image: yourdockerhubusername/datetime-app
+        ports:
+        - containerPort: 8080
+Kubernetes Service YAML (service.yaml):
+yaml
+Copy
+Edit
+apiVersion: v1
+kind: Service
+metadata:
+  name: datetime-app-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: datetime-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+✅ This exposes the app publicly over the Internet.
+
+Commands used to Deploy:
+bash
+Copy
+Edit
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+✅ Now, the application is available on the public IP provided by the LoadBalanc
